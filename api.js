@@ -22,7 +22,7 @@ var bodyParser = require('body-parser');
 var crypto = require('crypto');
 var async = require('async');
 
-var configuration = require('configure');
+var configuration = require('./configure.js');
 var hostURL = 'http://api.sidecar.io';
 
 var authURI = '/rest/v1/provision/application/auth';

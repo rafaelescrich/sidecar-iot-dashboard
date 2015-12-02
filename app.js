@@ -32,8 +32,8 @@ var archiver = require('archiver');
 var db = require('./db');
 var config = require('./config');
 
-var sidecar = require('api');
-var configuration = require('configure');
+var sidecar = require('./api.js');
+var configuration = require('./configure.js');
 // Sidecar Global Config
 var appKeyId = configuration.developerKeys.appKeyId;
 var siteName = "Sidecar";
