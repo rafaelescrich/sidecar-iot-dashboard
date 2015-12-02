@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "async": "^1.4.0",
     "archiver": "^0.16.0",
     "body-parser": "~1.12.4",
     "connect-ensure-login": "^0.1.1",
@@ -22,6 +23,7 @@
     "node-uuid": "^1.4.3",
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",
+    "request": "^2.58.0",
     "serve-favicon": "~2.2.1"
   }
 }
