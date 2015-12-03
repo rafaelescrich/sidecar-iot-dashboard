@@ -486,7 +486,8 @@ app.post('/globalConfig', require('connect-ensure-login').ensureLoggedIn(),
             console.log('provisionUser statusCode:' + result.statusCode);
           }
           else {
-            adminErrorMessage = "Error Code: " + result.statusCode;
+            body = JSON.parse(result.body);
+            adminErrorMessage = body.message;
           }
           return res.redirect('/admin-dashboard');
         });
