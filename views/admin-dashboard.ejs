@@ -163,7 +163,7 @@
                                     <div class="col-sm-10"><input type="text" value="<%= appSecret %>" name="appSecret" class="form-control" spellcheck="false"> <span class="help-block m-b-none"> <br /><small>Get your Sidecar Application Keys at <a target="_blank" href='https://console.sidecar.io/applications'>https://console.sidecar.io/applications</a> </small></span>
                                     </div>
                                 </div>
-                                <div class="hr-line-dashed"></div>
+                                <div id="userConfig" class="hr-line-dashed"></div>
                                 <div class="form-group"><label class="col-sm-2 control-label">Your Name</label>
                                     <div class="col-sm-10"><input type="text" value="<%= yourName %>" name="yourName" class="form-control"> <span class="help-block m-b-none"> <small> </small></span>
                                     </div>
@@ -219,7 +219,11 @@
                                 <div class="form-group"><label class="col-sm-2 control-label">UUID</label>
                                     <div class="col-sm-10">
                                       <input disabled='' type="text" value="<%= adminDeviceUUID %>" name="adminDeviceUUID" class="form-control" spellcheck="false"> <span class="help-block m-b-none"> <br /><small><%= adminDeviceMessage %></small></span>
-                                      <button class="btn btn-warning" type="submit">Register Device</button><br /><small>This action will provision a device in your Sidecar App Account.</small></span>
+                                        <% if (isAdminUserSet) { %>
+                                         <button class="btn btn-warning" type="submit">Register Device</button><br /><small>This action will provision a device in your Sidecar App Account.</small>
+                                        <% } else { %>
+                                          <button disabled='' class="btn btn-warning" type="submit">Register Device</button><br /><small>This action will provision a device in your Sidecar App Account. You need to register your user details in the <a href="/admin-dashboard#userConfig">previous section</a> first.</small>
+                                        <% } %>
                                     </div>
                                 </div>
                             </form>
@@ -228,7 +232,12 @@
                             <form method="post" class="form-horizontal"  action="/generateDeviceCode">
                                 <div class="form-group"><label class="col-sm-2 control-label">Custom Code</label>
                                     <div class="col-sm-10">
-                                      <button class="btn btn-primary" type="submit">Generate Device Firmware</button><br />
+                                      <% if (isAdminUserSet) { %>
+                                        <button class="btn btn-primary" type="submit">Generate Device Firmware</button><br />
+                                      <% } else { %>
+                                        <button disabled='' class="btn btn-primary" type="submit">Generate Device Firmware</button><br />
+                                        <small>You need to register your user details in the <a href="/admin-dashboard#userConfig">previous section</a> first.</small><br />
+                                      <% } %>
                                       <span>
                                         <small>This action will bake Node.js code for your own Sensor Device based on your Sidecar Access Keys and UUID.
                                           <br />You can run it from any Node.js compatible hardware either a Raspberry Pi, a BeagleBone or your laptop.
@@ -245,7 +254,12 @@
                             <form method="get" class="form-horizontal"  action="/downloadDeviceCode">
                                 <div class="form-group"><label class="col-sm-2 control-label">Download Code</label>
                                     <div class="col-sm-10">
-                                      <button class="btn btn-primary" type="submit">Download Device Firmware</button><br />
+                                      <% if (isAdminUserSet) { %>
+                                        <button class="btn btn-primary" type="submit">Download Device Firmware</button><br />
+                                      <% } else { %>
+                                        <button disabled='' class="btn btn-primary" type="submit">Download Device Firmware</button><br />
+                                        <small>You need to register your user details in the <a href="/admin-dashboard#userConfig">previous section</a> first.</small>
+                                      <% } %>
                                       <span>
                                         <small>
                                           Feel free to check out our <a href="/quickstart-guide">Guickstart Guide</a>.

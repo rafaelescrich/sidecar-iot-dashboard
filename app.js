@@ -64,6 +64,7 @@ var adminDeviceMessage = "";
 var errorAdminMessage = "Invalid Credentials";
 var isAdminUser = false;
 var isUser = false;
+var isAdminUserSet = false;
 
 // TO DO: Implement logic for multiple session users using unique identifiers
 // TO DO: Implement 'isAdminUser' security + uuid
@@ -336,6 +337,7 @@ app.get('/admin-dashboard', require('connect-ensure-login').ensureLoggedIn(), fu
         res.render('admin-dashboard', {
           user: req.user,
           isAdminUser: isAdminUser,
+          isAdminUserSet: isAdminUserSet,
           invalidAdmin: invalidAdmin,
           errorAdminMessage: errorAdminMessage,
           appKeyId: appKeyId,
@@ -469,6 +471,7 @@ app.post('/globalConfig', require('connect-ensure-login').ensureLoggedIn(),
         adminUserKeyId = body.keyId;
         adminUserSecret = body.secret;
         adminErrorMessage = "";
+        isAdminUserSet = true;
         console.log('getUserKeys keyId:' + adminUserKeyId);
         console.log('getUserKeys secret:' + adminUserSecret);
         console.log('getUserKeys statusCode:' + result.statusCode);
@@ -481,11 +484,13 @@ app.post('/globalConfig', require('connect-ensure-login').ensureLoggedIn(),
             adminUserKeyId = body.keyId;
             adminUserSecret = body.secret;
             adminErrorMessage = "";
+            isAdminUserSet = true;
             console.log('provisionUser keyId:' + adminUserKeyId);
             console.log('provisionUser secret:' + adminUserSecret);
             console.log('provisionUser statusCode:' + result.statusCode);
           }
           else {
+            isAdminUserSet = false;
             body = JSON.parse(result.body);
             adminErrorMessage = body.message;
           }
