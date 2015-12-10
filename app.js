@@ -118,10 +118,35 @@ function queryLatestEvent(callback){
     console.log('statusCode:' + result.statusCode);
     console.log('body:' + result.body);
     if(result.statusCode == 200){
+      currentTimeQuery = new Date();
+      currentTimeQuery.setSeconds(currentTimeQuery.getSeconds() - 5);
+      currentTimeQuery = currentTimeQuery.toISOString();
+      currentTimeQuery = new Date(currentTimeQuery);
+      currentTimeQuery = currentTimeQuery.getTime();
+      console.log('now: ' + currentTimeQuery);
+
+
       body = JSON.parse(result.body);
-      sensorData1 = body[0].answer.events[0].readings[0].value;
+
+      var sensorTime1 = body[0].answer.events[0].readings[0].ts;
+      sensorTime1 = new Date(sensorTime1);
+      sensorTime1 = sensorTime1.getTime();
+      console.log("sensorTime1: " + sensorTime1);
+
+      var sensorTime2 = body[0].answer.events[0].readings[1].ts;
+      sensorTime2 = new Date(sensorTime2);
+      sensorTime2 = sensorTime2.getTime();
+      console.log("sensorTime2: " + sensorTime2);
+
+      console.log("diff1: " + (currentTimeQuery - sensorTime1));
+      console.log("diff2: " + (currentTimeQuery - sensorTime2));
+
+      if(currentTimeQuery - sensorTime1 < 1000) sensorData1 = body[0].answer.events[0].readings[0].value;
+      else sensorData1 = 0;
       console.log("sensor 1:" + sensorData1);
-      sensorData2 = body[0].answer.events[0].readings[1].value;
+
+      if(currentTimeQuery - sensorTime2 < 0) sensorData2 = body[0].answer.events[0].readings[1].value;
+      else sensorData2 = 0;
       console.log("sensor 2:" + sensorData2);
     }
   });
