@@ -24,8 +24,12 @@ if (PRODUCTION_MODE){
   var developerKeys = exports.developerKeys = {
       // Application Access Keys
       // https://console.sidecar.io/application
-      'appKeyId': '',
-      'appSecret': '',
+      'appKeyId': 'APP_KEY_ID',
+      'appSecret': 'APP_SECRET',
+
+      'adminName': 'ADMIN_NAME',
+      'adminEmail': 'ADMIN_EMAIL',
+      'adminPassword': 'ADMIN_PASSWORD',
 
       // Testing
       'deviceId': '',
@@ -38,8 +42,12 @@ else {
   var developerKeys = exports.developerKeys = {
     // Application Access Keys
     // https://console.sidecar.io/application
-    'appKeyId': '',
-    'appSecret': '',
+    'appKeyId': 'APP_KEY_ID',
+    'appSecret': 'APP_SECRET',
+
+    'yourName': 'YOUR_NAME',
+    'email': 'EMAIL',
+    'password': 'PASSWORD',
 
     // Testing
     'deviceId': '',

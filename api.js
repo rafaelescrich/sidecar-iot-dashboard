@@ -29,12 +29,12 @@ var authURI = '/rest/v1/provision/application/auth';
 var applicationStatusURI =  '/rest/v1/provision/application/status';
 
 // App access keys
-var appKeyId = configuration.developerKeys.appKeyId;
-var appSecret = configuration.developerKeys.appSecret;
+//var appKeyId = configuration.developerKeys.appKeyId;
+//var appSecret = configuration.developerKeys.appSecret;
 
 // User access keys
-var userKeyId = configuration.developerKeys.userKeyId;
-var userSecret = configuration.developerKeys.userSecret;
+//var userKeyId = configuration.developerKeys.userKeyId;
+//var userSecret = configuration.developerKeys.userSecret;
 
 // User Device ID
 var deviceId = configuration.developerKeys.deviceId;
@@ -367,7 +367,8 @@ module.exports = {
    * You may provide a "limit" argument in the query to cap the number of records returned. If no limit is provided it will default to 5.
    *
    */
-  queryLatestEvent: function(payload, currentTime, userKeyId, userSecret, callback){
+  queryLatestEvent: function(payload, currentTime, userKeyId, userSecret, deviceId, callback){
+    payload = JSON.stringify(payload);
     var httpMethod = 'POST';
     var uriPath = '/rest/v1/query/user/device/' + deviceId + '/latest';
     var currentTime = new Date().toISOString();
@@ -375,8 +376,8 @@ module.exports = {
     var signatureVersion = '1';
     var toSign = httpMethod + '\n' + uriPath + '\n' + currentTime + '\n' + md5 + '\n' + signatureVersion;
     var signature = crypto.createHmac('sha1', userSecret).update(toSign).digest('base64')
-    request.post({
-      //method: httpMethod,
+    request({
+      method: httpMethod,
       url: hostURL + uriPath,
       headers: {
         'Content-Type': 'application/json',
@@ -386,14 +387,15 @@ module.exports = {
         'Authorization': 'SIDECAR '+ userKeyId + ': ' + signature
     },
     body: payload
-    }, function(error, response, body){
-      if(!error){
-        var result = body;
-        callback(error, result, response.statusCode);
-        //console.log('queryLatestEvent body: ' + body);
-        //console.log('queryLatestEvent response: ' + response.statusCode);
-      }
-    });
+    }, function(error, response){
+        if(!error){
+          callback(error, response);
+        }
+        else {
+          callback(error, response);
+          console.log(error);
+        }
+      });
   },
 
 

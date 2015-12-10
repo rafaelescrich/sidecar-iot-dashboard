@@ -41,8 +41,8 @@ var appSecret = configuration.developerKeys.appSecret;
 var adminUserKeyId = configuration.developerKeys.adminUserKeyId;
 var adminUserSecret = configuration.developerKeys.adminUserSecret;
 var adminDeviceUUID = configuration.developerKeys.adminUserSecret;
+var yourName = configuration.developerKeys.adminName;
 var adminEmail = configuration.developerKeys.adminEmail;
-var yourName = configuration.developerKeys.yourName;
 var adminPassword = configuration.developerKeys.adminPassword;
 var panel = config.dashboard.getPanels();
 
@@ -78,6 +78,10 @@ var totalDevices = 0;
 
 var nodeJScode = "Node.js code";
 var generateCode = false;
+
+var sensorData1 = 0;
+var sensorData2 = 0;
+
 function provisionUser(username, password, callback){
   var data = {
     username:username,
@@ -95,6 +99,31 @@ function getUserKeys(username, password, callback){
   };
   sidecar.getUserKeys(data, appKeyId, appSecret, function(err, result){
     callback(null, result);
+  });
+}
+
+function queryLatestEvent(callback){
+  var currentTimeQuery= new Date().toISOString();
+  var query = {
+    stream: 'sensors-stream',
+    args: [
+        {
+          key: 'limit',
+          value: '1'
+        }
+    ]
+  }
+  var deviceId1 = "3f420da0-9eb9-11e5-91bd-795435f72406";
+  sidecar.queryLatestEvent(query, currentTimeQuery, adminUserKeyId, adminUserSecret, deviceId1,function(err, result) {
+    console.log('statusCode:' + result.statusCode);
+    console.log('body:' + result.body);
+    if(result.statusCode == 200){
+      body = JSON.parse(result.body);
+      sensorData1 = body[0].answer.events[0].readings[0].value;
+      console.log("sensor 1:" + sensorData1);
+      sensorData2 = body[0].answer.events[0].readings[1].value;
+      console.log("sensor 2:" + sensorData2);
+    }
   });
 }
 
@@ -456,6 +485,7 @@ app.post('/file-upload', require('connect-ensure-login').ensureLoggedIn(), uploa
 
 app.post('/globalConfig', require('connect-ensure-login').ensureLoggedIn(),
   function(req, res) {
+
     appKeyId = req.body.appKeyId;
     appSecret = req.body.appSecret;
     //adminUserKeyId = req.body.adminUserKeyId;
@@ -464,39 +494,65 @@ app.post('/globalConfig', require('connect-ensure-login').ensureLoggedIn(),
     adminPassword = req.body.adminPassword;
     yourName = req.body.yourName;
 
-    getUserKeys(adminEmail, adminPassword, function(err, result) {
-      if(result.statusCode == 200)
-      {
-        body = JSON.parse(result.body);
-        adminUserKeyId = body.keyId;
-        adminUserSecret = body.secret;
-        adminErrorMessage = "";
-        isAdminUserSet = true;
-        console.log('getUserKeys keyId:' + adminUserKeyId);
-        console.log('getUserKeys secret:' + adminUserSecret);
-        console.log('getUserKeys statusCode:' + result.statusCode);
-        return res.redirect('/admin-dashboard');
+    var content;
+    console.log(content);
+    fs.readFile(path.join(__dirname,"","configure.original.js"), 'utf8',function (err,data) {
+      if (err) {
+          console.log(err);
+          //process.exit(1);
       }
-      else {
-        provisionUser(adminEmail, adminPassword, function(err, result) {
-          if(result.statusCode == 200){
+      data = data.replace(/APP_KEY_ID/g, appKeyId);
+      data = data.replace(/APP_SECRET/g, appSecret);
+      data = data.replace(/ADMIN_NAME/g, yourName);
+      data = data.replace(/ADMIN_EMAIL/g, adminEmail);
+      data = data.replace(/ADMIN_PASSWORD/g, adminPassword);
+      content = util.format(data);
+
+      fs.writeFile("configure.js", data, function(err) {
+        if(err) {
+            //return console.log(err);
+        }
+
+        getUserKeys(adminEmail, adminPassword, function(err, result) {
+          if(result.statusCode == 200)
+          {
             body = JSON.parse(result.body);
             adminUserKeyId = body.keyId;
             adminUserSecret = body.secret;
             adminErrorMessage = "";
             isAdminUserSet = true;
-            console.log('provisionUser keyId:' + adminUserKeyId);
-            console.log('provisionUser secret:' + adminUserSecret);
-            console.log('provisionUser statusCode:' + result.statusCode);
+            console.log('getUserKeys keyId:' + adminUserKeyId);
+            console.log('getUserKeys secret:' + adminUserSecret);
+            console.log('getUserKeys statusCode:' + result.statusCode);
+            return res.redirect('/admin-dashboard');
           }
           else {
-            isAdminUserSet = false;
-            body = JSON.parse(result.body);
-            adminErrorMessage = body.message;
+            provisionUser(adminEmail, adminPassword, function(err, result) {
+              if(result.statusCode == 200){
+                body = JSON.parse(result.body);
+                adminUserKeyId = body.keyId;
+                adminUserSecret = body.secret;
+                adminErrorMessage = "";
+                isAdminUserSet = true;
+                console.log('provisionUser keyId:' + adminUserKeyId);
+                console.log('provisionUser secret:' + adminUserSecret);
+                console.log('provisionUser statusCode:' + result.statusCode);
+              }
+              else {
+                isAdminUserSet = false;
+                console.log(result);
+                //body = JSON.parse(result.body);
+                //adminErrorMessage = body.message;
+              }
+              return res.redirect('/admin-dashboard');
+            });
           }
-          return res.redirect('/admin-dashboard');
         });
-      }
+
+      });
+
+
+
     });
 
 });
@@ -696,12 +752,30 @@ function getUserDevicesList(callback){
 
 function registerDevice(uuid, userKeyId, userSecret, callback){
   var data = {
-    deviceId:uuid
+    //deviceId:uuid
+    deviceId:"3f420da0-9eb9-11e5-91bd-795435f72406"
   };
   sidecar.registerDevice(data, userKeyId, userSecret, function(err, result){
     callback(null, result);
   });
 }
+
+// Display data on dasboard
+setInterval(function() {
+  if(isAdminUserSet){
+    queryLatestEvent();
+  }
+  //sensorData1 = Math.floor((Math.random() * 39) + 25);
+  //sensorData2 = 10;
+  //console.log("sensorData1: " + sensorData1);
+  //console.log("sensorData2: " + sensorData2);
+  app.get('/getDataSensor1', function (req, res) {
+    res.send(sensorData1.toString());
+  });
+  app.get('/getDataSensor2', function (req, res) {
+    res.send(sensorData2.toString());
+  });
+},1000)
 
 // Debugging
 /*

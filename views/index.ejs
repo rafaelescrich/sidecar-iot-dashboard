@@ -135,11 +135,11 @@
 	                            </div>
 	                        </div>
 	                        <div class="ibox-content">
-                              <b>Sensor 1: </b> <%= panel[0].variable1 %>
+                              <b>Sensor 1: </b> <%= panel[0].variable1 %>  <b id="content_area1">Loading...</b>
 	                            <div class="flot-chart">
 	                                <div class="flot-chart-content" id="panel1graph1"></div>
 	                            </div>
-                              <b>Sensor 2: </b> <%= panel[0].variable2 %>
+                              <b>Sensor 2: </b> <%= panel[0].variable2 %> <b id="content_area2">Loading...</b>
                               <div class="flot-chart">
                                   <div class="flot-chart-content" id="panel1graph2"></div>
                               </div>
@@ -148,91 +148,6 @@
 	                </div>
 	            </div>
               <% } %>
-
-
-              <% if (panel[1].enable == 'true'){ %>
-              <div class="row">
-                  <div class="col-lg-12">
-                      <div class="ibox float-e-margins">
-                          <div class="ibox-title">
-                              <h5><%= panel[1].panelName %> </h5>
-                              <div class="ibox-tools">
-                                  <a class="collapse-link">
-                                      <i class="fa fa-chevron-up"></i>
-                                  </a>
-                              </div>
-                          </div>
-                          <div class="ibox-content">
-                              <b>Sensor 1: </b> <%= panel[1].variable1 %>
-                              <div class="flot-chart">
-                                  <div class="flot-chart-content" id="panel2graph1"></div>
-                              </div>
-                              <b>Sensor 2: </b> <%= panel[1].variable2 %>
-                              <div class="flot-chart">
-                                  <div class="flot-chart-content" id="panel2graph2"></div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <% } %>
-
-
-              <% if (panel[2].enable == 'true'){ %>
-              <div class="row">
-                  <div class="col-lg-12">
-                      <div class="ibox float-e-margins">
-                          <div class="ibox-title">
-                              <h5><%= panel[2].panelName %> </h5>
-                              <div class="ibox-tools">
-                                  <a class="collapse-link">
-                                      <i class="fa fa-chevron-up"></i>
-                                  </a>
-                              </div>
-                          </div>
-                          <div class="ibox-content">
-                              <b>Sensor 1: </b> <%= panel[2].variable1 %>
-                              <div class="flot-chart">
-                                  <div class="flot-chart-content" id="panel3graph1"></div>
-                              </div>
-                              <b>Sensor 2: </b> <%= panel[2].variable2 %>
-                              <div class="flot-chart">
-                                  <div class="flot-chart-content" id="panel3graph2"></div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <% } %>
-
-
-              <% if (panel[3].enable == 'true'){ %>
-              <div class="row">
-                  <div class="col-lg-12">
-                      <div class="ibox float-e-margins">
-                          <div class="ibox-title">
-                              <h5><%= panel[3].panelName %> </h5>
-                              <div class="ibox-tools">
-                                  <a class="collapse-link">
-                                      <i class="fa fa-chevron-up"></i>
-                                  </a>
-                              </div>
-                          </div>
-                          <div class="ibox-content">
-                              <b>Sensor 1: </b> <%= panel[3].variable1 %>
-                              <div class="flot-chart">
-                                  <div class="flot-chart-content" id="panel4graph1"></div>
-                              </div>
-                              <b>Sensor 2: </b> <%= panel[3].variable2 %>
-                              <div class="flot-chart">
-                                  <div class="flot-chart-content" id="panel4graph2"></div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <% } %>
-
 
               <div class="row">
                 <div class="col-lg-12">
@@ -308,30 +223,36 @@
 
 	    <script type="text/javascript">
 
+        var sensorData1;
+        var sensorData2;
+        var content_area1 = $("#content_area1");
+        var content_area2 = $("#content_area2");
 
-
-	      /*
-        var sensorData;
         function load_content(){
-	          $.get("/getdata", function(data1){
-	              sensorData = data1;
-	              load_content();
-	          });
-	      }
-	      load_content();
-        */
+            $.get("/getDataSensor1", function(data){
+                sensorData1 = data;
+                content_area1.html(data);
+                console.log(sensorData1);
+            }).fail(function() {
+              sensorData1 = 0;
+              content_area1.html("No Connection");
+              console.log(sensorData1);
+            });
+
+            $.get("/getDataSensor2", function(data){
+                sensorData2 = data;
+                content_area2.html(data);
+                console.log(sensorData2);
+            }).fail(function() {
+              sensorData2 = 0;
+              content_area2.html("No Connection");
+              console.log(sensorData2);
+            });
+        }
+        load_content();
 
 	      var container1 = $("#panel1graph1");
         var container2 = $("#panel1graph2");
-
-        var container3 = $("#panel2graph1");
-        var container4 = $("#panel2graph2");
-
-        var container5 = $("#panel3graph1");
-        var container6 = $("#panel3graph2");
-
-        var container7 = $("#panel4graph1");
-        var container8 = $("#panel4graph2");
 
 	      // Determine how many data points to keep based on the placeholder's initial size;
 	      // this gives us a nice high-res plot while avoiding more than one point per pixel.
@@ -342,22 +263,12 @@
         var data1 = [];
         var data2 = [];
 
-        var data3 = [];
-        var data4 = [];
-
-        var data5 = [];
-        var data6 = [];
-
-        var data7 = [];
-        var data8 = [];
-
-
-        function getSensorData(data) {
+        function getSensorData(data, sensor) {
           if (data.length) { data = data.slice(1); }
           while (data.length < maximum) {
               var previous = data.length ? data[data.length - 1] : 50;
-              //var y =  Number(sensorData);
-              var y = previous + Math.random() * 10 - 5;
+              if(sensor == 1) var y = Number(sensorData1);
+              if(sensor == 2) var y = Number(sensorData2);
               data.push(y < 0 ? 0 : y > 100 ? 100 : y);
           }
           return data;
@@ -370,8 +281,7 @@
 	          return res;
 	      }
 
-
-        data1 = getSensorData(data1);
+        data1 = getSensorData(data1, 1);
         var series1 = [{
             data: scrollData(data1),
             lines: {
@@ -392,7 +302,7 @@
             }
         }];
 
-        data2 = getSensorData(data2);
+        data2 = getSensorData(data2, 2);
         var series2 = [{
             data: scrollData(data2),
             lines: {
@@ -412,138 +322,6 @@
                 }
             }
         }];
-
-
-
-        data3 = getSensorData(data3);
-        var series3 = [{
-            data: scrollData(data3),
-            lines: {
-                show: <%= panel[1].lineEnable %>,
-                fill: true
-            },
-            bars: {
-                show: <%= panel[1].barEnable %>,
-                barWidth: 0.6,
-                fill: true,
-                fillColor: {
-                    colors: [{
-                        opacity: 0.8
-                    }, {
-                        opacity: 0.8
-                    }]
-                }
-            }
-        }];
-
-        data4 = getSensorData(data4);
-        var series4 = [{
-            data: scrollData(data4),
-            lines: {
-                show: <%= panel[1].lineEnable %>,
-                fill: true
-            },
-            bars: {
-                show: <%= panel[1].barEnable %>,
-                barWidth: 0.6,
-                fill: true,
-                fillColor: {
-                    colors: [{
-                        opacity: 0.8
-                    }, {
-                        opacity: 0.8
-                    }]
-                }
-            }
-        }];
-
-
-        data5 = getSensorData(data5);
-        var series5 = [{
-            data: scrollData(data5),
-            lines: {
-                show: <%= panel[2].lineEnable %>,
-                fill: true
-            },
-            bars: {
-                show: <%= panel[2].barEnable %>,
-                barWidth: 0.6,
-                fill: true,
-                fillColor: {
-                    colors: [{
-                        opacity: 0.8
-                    }, {
-                        opacity: 0.8
-                    }]
-                }
-            }
-        }];
-
-        data6 = getSensorData(data6);
-        var series6 = [{
-            data: scrollData(data6),
-            lines: {
-                show: <%= panel[2].lineEnable %>,
-                fill: true
-            },
-            bars: {
-                show: <%= panel[2].barEnable %>,
-                barWidth: 0.6,
-                fill: true,
-                fillColor: {
-                    colors: [{
-                        opacity: 0.8
-                    }, {
-                        opacity: 0.8
-                    }]
-                }
-            }
-        }];
-
-
-
-        data7 = getSensorData(data7);
-        var series7 = [{
-            data: scrollData(data7),
-            lines: {
-                show: <%= panel[3].lineEnable %>,
-                fill: true
-            },
-            bars: {
-                show: <%= panel[3].barEnable %>,
-                barWidth: 0.6,
-                fill: true,
-                fillColor: {
-                    colors: [{
-                        opacity: 0.8
-                    }, {
-                        opacity: 0.8
-                    }]
-                }
-            }
-        }];
-
-        data8 = getSensorData(data8);
-        var series8 = [{
-            data: scrollData(data8),
-            lines: {
-                show: <%= panel[3].lineEnable %>,
-                fill: true
-            },
-            bars: {
-                show: <%= panel[3].barEnable %>,
-                barWidth: 0.6,
-                fill: true,
-                fillColor: {
-                    colors: [{
-                        opacity: 0.8
-                    }, {
-                        opacity: 0.8
-                    }]
-                }
-            }
-        }];
-
 
         function plot(container,series) {
           var plot = $.plot(container, series, {
@@ -596,45 +374,17 @@
 	      // Update the random dataset at 25FPS for a smoothly-animating chart
 	      setInterval(function updateSensorData() {
             <% if (panel[0].enable == 'true'){ %>
-              data1 = getSensorData(data1);
+              load_content();
+              data1 = getSensorData(data1, 1);
   	          series1[0].data = scrollData(data1);
               plot(container1,series1);
 
-              data2 = getSensorData(data2);
+              data2 = getSensorData(data2, 2);
               series2[0].data = scrollData(data2);
               plot(container2,series2);
             <% } %>
-            <% if (panel[1].enable == 'true'){ %>
-              data3 = getSensorData(data3);
-              series3[0].data = scrollData(data3);
-              plot(container3,series3);
+	      }, 1000);
 
-              data4 = getSensorData(data4);
-              series4[0].data = scrollData(data4);
-              plot(container4,series4);
-            <% } %>
-            <% if (panel[2].enable == 'true'){ %>
-              data5 = getSensorData(data5);
-              series5[0].data = scrollData(data5);
-              plot(container5,series5);
 
-              data6 = getSensorData(data6);
-              series6[0].data = scrollData(data6);
-              plot(container6,series6);
-            <% } %>
-            <% if (panel[3].enable == 'true'){ %>
-              data7 = getSensorData(data7);
-              series7[0].data = scrollData(data7);
-              plot(container7,series7);
-
-              data8 = getSensorData(data8);
-              series8[0].data = scrollData(data8);
-              plot(container8,series8);
-            <% } %>
-	      }, 40);
-
-	      //setInterval(function updateSensorData() {
-
-	      //}, 1000)
 	    </script>
 <% } %>
