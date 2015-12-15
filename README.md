@@ -3,7 +3,7 @@ Sidecar IoT Dashboard
 
 Sidecar IoT Dashboard is a Node.js application to display data from your Raspberry Pi or compatible hardware. You can customize your Dashboard, changing sensors, chart types and uploading your own logo. The Dashboard allows users to register devices and display your data in graphs.
 
-[![Screen Preview](./img/preview.png)](./img/preview.png)
+![Screen Preview](./img/preview.png)
 
 ## Three Key Steps to a Working Configuration.
 
@@ -72,7 +72,7 @@ sudo node app.js
 
 Copy the Access Keys (KeyId and Secret).
 
-[![Screen Preview](./img/console-app-keys.png)]
+![Screen Preview](./img/console-app-keys.png)
 
 **Login to Developer Dashboard.** Login http://localhost/admin
 
@@ -81,15 +81,15 @@ Password: root
 
 NOTE: Credentials should be changed immediately by modifying the file /sidecar-iot-dashboard/db/adminUsers.js
 
-[![Screen Preview](./img/admin-login.png)]
+![Screen Preview](./img/admin-login.png)
 
 **Add Sidecar Application Keys + Secrets.** Paste the Access Keys (KeyId and Secret) from the Console and insert your name, email and password and save. This will create your first user. Check that the App created a User ID & Secret.
 
-[![Screen Preview](./img/admin-panel-keys.png)]
+![Screen Preview](./img/admin-panel-keys.png)
 
 **Customise the Dashboard**, charts and sensors as required (optional, the defaults will produce a working demo)
 
-[![Screen Preview](./img/admin-panel-chart.png)]
+![Screen Preview](./img/admin-panel-chart.png)
 
 **Register a New Device and Generate Firmware**
 
@@ -103,7 +103,7 @@ Press the Download Device Firmware Button
 
 Copy the downloaded directory into your preferred application directory
 
-[![Screen Preview](./img/admin-panel-code.png)]
+![Screen Preview](./img/admin-panel-code.png)
 
 
 ## 2. Load Drivers to your Hardware
@@ -146,7 +146,7 @@ Your Device should be sending data to the Sidecar Cloud.
 
 **Check your End User Dashboard.** Your Device should now be pushing data to the cloud and displaying it on your dashboard.
 
-[![Screen Preview](./img/admin-panel-code.png)]
+![Screen Preview](./img/preview.png)
 
 ## Contact [Sidecar.io](http://sidecar.io)
 
