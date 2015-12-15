@@ -1,4 +1,4 @@
-sidecar-iot-dashboard
+Sidecar IoT Dashboard
 =========
 
 Sidecar IoT Dashboard is a Node.js application to display data from your Raspberry Pi or compatible hardware. You can customize your Dashboard, changing sensors, chart types and uploading your own logo. The Dashboard allows users to register devices and display your data in graphs.
