@@ -17,7 +17,7 @@ Sidecar IoT Dashboard is portable so you can quickly test and personalize it loc
 
 The **Sidecar Console** is used by the **Developer** (you) for creating and managing new **Applications** created on the **Sidecar API Platform**.
 
-The **Sidecar IoT Dashboard** is a portable self hosted NodeJS application that is used by the **Developer** to create and deploy a End User facing **Application**.
+The **Sidecar IoT Dashboard** is a portable self hosted Node.js application that is used by the **Developer** to create and deploy a End User facing **Application**.
 
 It can be deployed locally or on a Cloud instance or server, all the source files are provided so you can customize or extend it to your needs.
 
@@ -27,7 +27,7 @@ There are two aspects to the **Sidecar IoT Dashboard**, first the admin panel wh
 
 ## 1. Launch the IoT Dashboard
 
-**Choose where you will deploy the Dashboard.** The Developer/End User Dashboard is based on NodeJS and talks to the Sidecar backend. It's portable and can be deployed locally, Google Cloud or Amazon Web Services or another Raspberry Pi.
+**Choose where you will deploy the Dashboard.** The Developer/End User Dashboard is based on Node.js and talks to the Sidecar backend. It's portable and can be deployed locally, Google Cloud or Amazon Web Services or another Raspberry Pi.
 
 **Decide Raspberry Pi + PC/Mac Configuration.** The device driver runs on the Raspberry and the hosted dashboard runs on your PC/Mac or cloud. If running locally: the Raspberry and PC/Mac must be on the same network range. If you are hosting the dashboard the Raspberry must be able to connect to the dashboard via the internet. An ideal first test situation is a Raspberry with keyboard & monitor on the same network as a PC/Mac.
 
@@ -35,7 +35,7 @@ There are two aspects to the **Sidecar IoT Dashboard**, first the admin panel wh
 
 **Download Dashboard Repository.** Go to the Sidecar IoT Dashboard repository on Github , download it or use Github to clone it to your server in your preferred directory
 
-**Install NodeJS.** Make sure you have installed Node.js in your machine. From your Terminal, please run this command:
+**Install Node.js.** Make sure you have installed Node.js in your machine. From your Terminal, please run this command:
 
 ```
 node --version
@@ -85,7 +85,7 @@ NOTE: Credentials should be changed immediately by modifying the file /sidecar-i
 
 **Register a New Device and Generate Firmware**
 
-This code is auto generated and contains the credentials + API commands required to join your node.js compatible hardware to your specific application.
+This code is auto generated and contains the credentials + API commands required to join your Node.js compatible hardware to your specific application.
 
 Press the Register Device Button
 
@@ -97,9 +97,9 @@ Copy the downloaded directory into your preferred application directory
 
 ## 2. Load Drivers to your Hardware
 
-**Download NodeJS Device Firmware.** Download it from your Admin Panel (see previous step) to your Node.js compatible hardware into your preferred directory.
+**Download Node.js Device Firmware.** Download it from your Admin Panel (see previous step) to your Node.js compatible hardware into your preferred directory.
 
-**Setup NodeJS on your Hardware.** Make sure you have installed Node.js in your machine. From your Terminal, please run this command:
+**Setup Node.js on your Hardware.** Make sure you have installed Node.js in your machine. From your Terminal, please run this command:
 
 ```
 node --version
@@ -142,3 +142,7 @@ We love hearing from you!
 
 **For support or technical questions** please email support [at] sidecar.io
 Likewise, feel free to check out our other resources: [Sidecar Docs](http://docs.sidecar.io) and [API Docs](http://api.sidecar.io/docs/).
+
+---
+*Node.js is a trademark of Joyent, Inc. and is used with its permission. We are not endorsed by or affiliated with Joyent.*
+*Raspberry Pi is a trademark of the Raspberry Pi Foundation.*
