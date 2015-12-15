@@ -128,26 +128,30 @@ function queryLatestEvent(callback){
 
       body = JSON.parse(result.body);
 
-      var sensorTime1 = body[0].answer.events[0].readings[0].ts;
-      sensorTime1 = new Date(sensorTime1);
-      sensorTime1 = sensorTime1.getTime();
-      console.log("sensorTime1: " + sensorTime1);
+      if(body[0].answer.events[0]){
 
-      var sensorTime2 = body[0].answer.events[0].readings[1].ts;
-      sensorTime2 = new Date(sensorTime2);
-      sensorTime2 = sensorTime2.getTime();
-      console.log("sensorTime2: " + sensorTime2);
+        var sensorTime1 = body[0].answer.events[0].readings[0].ts;
+        sensorTime1 = new Date(sensorTime1);
+        sensorTime1 = sensorTime1.getTime();
+        console.log("sensorTime1: " + sensorTime1);
 
-      console.log("diff1: " + (currentTimeQuery - sensorTime1));
-      console.log("diff2: " + (currentTimeQuery - sensorTime2));
+        var sensorTime2 = body[0].answer.events[0].readings[1].ts;
+        sensorTime2 = new Date(sensorTime2);
+        sensorTime2 = sensorTime2.getTime();
+        console.log("sensorTime2: " + sensorTime2);
 
-      if(currentTimeQuery - sensorTime1 < 1000) sensorData1 = body[0].answer.events[0].readings[0].value;
-      else sensorData1 = 0;
-      console.log("sensor 1:" + sensorData1);
+        console.log("diff1: " + (currentTimeQuery - sensorTime1));
+        console.log("diff2: " + (currentTimeQuery - sensorTime2));
 
-      if(currentTimeQuery - sensorTime2 < 0) sensorData2 = body[0].answer.events[0].readings[1].value;
-      else sensorData2 = 0;
-      console.log("sensor 2:" + sensorData2);
+        if(currentTimeQuery - sensorTime1 < 1000) sensorData1 = body[0].answer.events[0].readings[0].value;
+        else sensorData1 = 0;
+        console.log("sensor 1:" + sensorData1);
+
+        if(currentTimeQuery - sensorTime2 < 0) sensorData2 = body[0].answer.events[0].readings[1].value;
+        else sensorData2 = 0;
+        console.log("sensor 2:" + sensorData2);
+
+      }
     }
   });
 }
